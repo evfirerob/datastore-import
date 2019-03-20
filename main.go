@@ -11,6 +11,8 @@ import (
 )
 
 const projectID = "mlab-sandbox"
+const namespace = "reboot-api"
+const filename = "import"
 
 type Credentials struct {
 	Hostname string `datastore:"hostname"`
@@ -32,11 +34,12 @@ func AddCredentials(ctx context.Context, client *datastore.Client,
 	}
 
 	key := datastore.IncompleteKey("Credentials", nil)
+	key.Namespace = namespace
 	return client.Put(ctx, key, credentials)
 }
 
 func deleteAll(ctx context.Context, client *datastore.Client) {
-	q := datastore.NewQuery("Credentials")
+	q := datastore.NewQuery("Credentials").Namespace(namespace)
 
 	var creds []*Credentials
 	keys, err := client.GetAll(ctx, q, &creds)
@@ -57,7 +60,7 @@ func main() {
 
 	deleteAll(ctx, client)
 
-	file, err := os.Open("import")
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
