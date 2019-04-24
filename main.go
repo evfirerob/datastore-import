@@ -32,8 +32,7 @@ func AddCredentials(ctx context.Context, client *datastore.Client,
 		Model:    model,
 		Address:  ip,
 	}
-
-	key := datastore.IncompleteKey("Credentials", nil)
+	key := datastore.NameKey("Credentials", host, nil)
 	key.Namespace = namespace
 	return client.Put(ctx, key, credentials)
 }
